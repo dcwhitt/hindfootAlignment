@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Hindfoot Alignment Comparator</title>
+
+  <style>
+    :root {
+      --navy: #002878;
+      --blue: #0748ca;
+      --gold: #d2b000;
+      --maroon: #98002e;
+      --text: #253746;
+      --muted: #667085;
+      --light: #f6f8fb;
+      --border: #d8dde6;
+      --white: #ffffff;
+      --green: #16803c;
+      --purple: #6d28d9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--light);
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      color: #dce6ff;
+      font-size: 0.98rem;
+    }
+
+    main {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero,
+    .panel,
+    .instructions,
+    .comparison {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    }
+
+    .hero {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .hero h2 {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 1.9rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .instructions {
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .instructions h2 {
+      color: var(--navy);
+      margin: 0 0 10px;
+    }
+
+    .instructions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .instructions ol {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .instructions li {
+      margin-bottom: 6px;
+    }
+
+    .notice {
+      background: #fff8e5;
+      border-left: 5px solid var(--gold);
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .setup-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px dashed var(--border);
+      border-radius: 9px;
+      background: var(--light);
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 10px 13px;
+      background: var(--navy);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    button:hover {
+      background: var(--blue);
+    }
+
+    button.secondary {
+      background: #e8ebf4;
+      color: var(--navy);
+    }
+
+    button.secondary:hover {
+      background: #d8def0;
+    }
+
+    button.danger {
+      background: var(--maroon);
+    }
+
+    button.danger:hover {
+      background: #750022;
+    }
+
+    button.green {
+      background: var(--green);
+    }
+
+    button.green:hover {
+      background: #126b32;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      color: var(--navy);
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+    }
+
+    .panel h3 {
+      color: var(--navy);
+      margin: 18px 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .mode-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin: 12px 0;
+      background: var(--light);
+    }
+
+    .mode-current {
+      font-weight: 800;
+      color: var(--maroon);
+    }
+
+    .small {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .canvas-wrap {
+      width: 100%;
+      min-height: 560px;
+      background:
+        linear-gradient(45deg, #f7f7f7 25%, transparent 25%),
+        linear-gradient(-45deg, #f7f7f7 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f7f7f7 75%),
+        linear-gradient(-45deg, transparent 75%, #f7f7f7 75%);
+      background-size: 22px 22px;
+      background-position: 0 0, 0 11px, 11px -11px, -11px 0px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      cursor: crosshair;
+      background: white;
+    }
+
+    .empty-state {
+      position: absolute;
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      pointer-events: none;
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--navy);
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #eef3ff;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .status.good {
+      background: #e8f8ee;
+      color: var(--green);
+    }
+
+    .status.warn {
+      background: #fff1f5;
+      color: var(--maroon);
+    }
+
+    .comparison {
+      margin-top: 22px;
+      padding: 20px;
+    }
+
+    .comparison h2 {
+      color: var(--navy);
+      margin-top: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.95rem;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--navy);
+      color: white;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .angle-big {
+      font-size: 1.6rem;
+      color: var(--navy);
+      font-weight: 800;
+      margin: 8px 0 0;
+    }
+
+    footer {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 24px 18px 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 1100px) {
+      .app-grid,
+      .instructions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .setup-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .canvas-wrap {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Hindfoot Alignment Comparator</h1>
+    <p>Compare radiographic hindfoot alignment angle with smartphone posterior heel photo alignment</p>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Manual point-click hindfoot alignment measurement</h2>
+      <p>
+        Upload a hindfoot alignment radiograph and a posterior standing clinical photo.
+        Click four landmarks on each image to calculate angles, compare results, and export training-ready labels.
+      </p>
+    </section>
+
+    <section class="instructions">
+      <h2>Point-click workflow</h2>
+      <div class="instructions-grid">
+        <div>
+          <h3>Radiograph HAA</h3>
+          <ol>
+            <li>Click proximal tibial axis point.</li>
+            <li>Click distal tibial axis point.</li>
+            <li>Click tibial axis / joint-line intersection point.</li>
+            <li>Click most inferior calcaneus point.</li>
+          </ol>
+        </div>
+        <div>
+          <h3>Clinical photo angle</h3>
+          <ol>
+            <li>Click proximal leg/Achilles midline point.</li>
+            <li>Click distal leg/Achilles midline point.</li>
+            <li>Click heel-axis proximal point near posterior ankle.</li>
+            <li>Click inferior/posterior heel center.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="notice">
+      <strong>Dataset-first design:</strong> Every finished measurement can export JSON labels with landmark coordinates, image dimensions, angles, and metadata for future machine-learning training.
+    </div>
+
+    <section class="setup-grid">
+      <div class="setup-card">
+        <label for="caseId">Case ID</label>
+        <input id="caseId" type="text" placeholder="Example: HFA_000001" />
+      </div>
+
+      <div class="setup-card">
+        <label for="sideSelect">Side</label>
+        <select id="sideSelect">
+          <option value="Right">Right</option>
+          <option value="Left">Left</option>
+          <option value="Bilateral/Unknown">Bilateral / Unknown</option>
+        </select>
+      </div>
+
+      <div class="setup-card">
+        <label for="measurementDate">Measurement Date</label>
+        <input id="measurementDate" type="date" />
+      </div>
+
+      <div class="setup-card">
+        <label for="notes">Notes</label>
+        <input id="notes" type="text" placeholder="Optional" />
+      </div>
+    </section>
+
+    <section class="app-grid">
+      <section class="panel">
+        <h2>Radiograph Measurement</h2>
+
+        <label for="xrayUpload">Upload Hindfoot Alignment Radiograph</label>
+        <input id="xrayUpload" type="file" accept="image/*" />
+
+        <div class="mode-box">
+          <h3>Current Step</h3>
+          <div id="xrayModeText" class="mode-current">Upload radiograph</div>
+          <p id="xrayInstructionText" class="small">Choose a hindfoot alignment radiograph to begin.</p>
+        </div>
+
+        <div class="button-row">
+          <button id="startXrayBtn" type="button">Start Radiograph Points</button>
+          <button id="undoXrayBtn" class="secondary" type="button">Undo Point</button>
+          <button id="clearXrayBtn" class="danger" type="button">Clear Radiograph</button>
+        </div>
+
+        <div id="xrayStatus" class="status">No radiograph loaded.</div>
+
+        <p class="angle-big" id="xrayAngleDisplay">Radiographic HAA: —</p>
+
+        <div class="canvas-wrap">
+          <canvas id="xrayCanvas"></canvas>
+          <div id="xrayEmpty" class="empty-state">
+            <strong>No radiograph loaded</strong>
+            Upload a hindfoot alignment radiograph.
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="downloadXrayImageBtn" class="secondary" type="button">Download Marked Radiograph</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Clinical Photo Measurement</h2>
+
+        <label for="photoUpload">Upload Posterior Standing Heel Photo</label>
+        <input id="photoUpload" type="file" accept="image/*" />
+
+        <div class="mode-box">
+          <h3>Current Step</h3>
+          <div id="photoModeText" class="mode-current">Upload photo</div>
+          <p id="photoInstructionText" class="small">Choose a posterior standing photo to begin.</p>
+        </div>
+
+        <div class="button-row">
+          <button id="startPhotoBtn" type="button">Start Photo Points</button>
+          <button id="undoPhotoBtn" class="secondary" type="button">Undo Point</button>
+          <button id="clearPhotoBtn" class="danger" type="button">Clear Photo</button>
+        </div>
+
+        <div id="photoStatus" class="status">No clinical photo loaded.</div>
+
+        <p class="angle-big" id="photoAngleDisplay">Photo Angle: —</p>
+
+        <div class="canvas-wrap">
+          <canvas id="photoCanvas"></canvas>
+          <div id="photoEmpty" class="empty-state">
+            <strong>No photo loaded</strong>
+            Upload a posterior standing heel photo.
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="downloadPhotoImageBtn" class="secondary" type="button">Download Marked Photo</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="comparison">
+      <h2>Comparison</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Measure</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody id="comparisonBody">
+          <tr>
+            <td>Radiographic HAA</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Clinical photo angle</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Difference: Photo − Radiograph</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Absolute difference</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="button-row">
+        <button id="downloadCsvBtn" class="green" type="button">Download Comparison CSV</button>
+        <button id="downloadJsonBtn" class="green" type="button">Download Training JSON</button>
+        <button id="downloadAllJsonBtn" class="secondary" type="button">Download Full Case JSON</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    This tool is for research, education, and measurement support only. It does not constitute medical advice and does not create a physician-patient relationship.
+  </footer>
+
+  <script>
+    const xrayLandmarks = [
+      {
+        key: "tibia_axis_proximal",
+        label: "Tibia proximal",
+        instruction: "Click the proximal tibial axis point."
+      },
+      {
+        key: "tibia_axis_distal",
+        label: "Tibia distal",
+        instruction: "Click the distal tibial axis point."
+      },
+      {
+        key: "joint_intersection",
+        label: "Joint intersection",
+        instruction: "Click the tibial axis / joint-line intersection point."
+      },
+      {
+        key: "inferior_calcaneus",
+        label: "Inferior calcaneus",
+        instruction: "Click the most inferior calcaneus point."
+      }
+    ];
+
+    const photoLandmarks = [
+      {
+        key: "leg_axis_proximal",
+        label: "Leg proximal",
+        instruction: "Click the proximal leg/Achilles midline point."
+      },
+      {
+        key: "leg_axis_distal",
+        label: "Leg distal",
+        instruction: "Click the distal leg/Achilles midline point."
+      },
+      {
+        key: "heel_axis_proximal",
+        label: "Heel proximal",
+        instruction: "Click the heel-axis proximal point near the posterior ankle."
+      },
+      {
+        key: "heel_center_inferior",
+        label: "Heel inferior",
+        instruction: "Click the inferior/posterior heel center point."
+      }
+    ];
+
+    const app = {
+      xray: createImageState("radiograph"),
+      photo: createImageState("clinical_photo")
+    };
+
+    const elements = {
+      caseId: document.getElementById("caseId"),
+      side: document.getElementById("sideSelect"),
+      date: document.getElementById("measurementDate"),
+      notes: document.getElementById("notes"),
+
+      xrayUpload: document.getElementById("xrayUpload"),
+      xrayCanvas: document.getElementById("xrayCanvas"),
+      xrayEmpty: document.getElementById("xrayEmpty"),
+      xrayModeText: document.getElementById("xrayModeText"),
+      xrayInstructionText: document.getElementById("xrayInstructionText"),
+      xrayStatus: document.getElementById("xrayStatus"),
+      xrayAngleDisplay: document.getElementById("xrayAngleDisplay"),
+      startXrayBtn: document.getElementById("startXrayBtn"),
+      undoXrayBtn: document.getElementById("undoXrayBtn"),
+      clearXrayBtn: document.getElementById("clearXrayBtn"),
+      downloadXrayImageBtn: document.getElementById("downloadXrayImageBtn"),
+
+      photoUpload: document.getElementById("photoUpload"),
+      photoCanvas: document.getElementById("photoCanvas"),
+      photoEmpty: document.getElementById("photoEmpty"),
+      photoModeText: document.getElementById("photoModeText"),
+      photoInstructionText: document.getElementById("photoInstructionText"),
+      photoStatus: document.getElementById("photoStatus"),
+      photoAngleDisplay: document.getElementById("photoAngleDisplay"),
+      startPhotoBtn: document.getElementById("startPhotoBtn"),
+      undoPhotoBtn: document.getElementById("undoPhotoBtn"),
+      clearPhotoBtn: document.getElementById("clearPhotoBtn"),
+      downloadPhotoImageBtn: document.getElementById("downloadPhotoImageBtn"),
+
+      comparisonBody: document.getElementById("comparisonBody"),
+      downloadCsvBtn: document.getElementById("downloadCsvBtn"),
+      downloadJsonBtn: document.getElementById("downloadJsonBtn"),
+      downloadAllJsonBtn: document.getElementById("downloadAllJsonBtn")
+    };
+
+    elements.date.valueAsDate = new Date();
+
+    function createImageState(type) {
+      return {
+        type,
+        img: new Image(),
+        loaded: false,
+        filename: "",
+        mode: "idle",
+        points: [],
+        angleDeg: null
+      };
+    }
+
+    function setStatus(element, message, type = "") {
+      element.className = "status";
+      if (type) element.classList.add(type);
+      element.textContent = message;
+    }
+
+    function formatNumber(value, digits = 2) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      return Number(value).toFixed(digits);
+    }
+
+    function getCanvasClickPoint(event, canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      return {
+        x: (event.clientX - rect.left) * scaleX,
+        y: (event.clientY - rect.top) * scaleY
+      };
+    }
+
+    function loadImage(file, state, canvas, emptyElement, redrawFn, loadedCallback) {
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        state.img = new Image();
+
+        state.img.onload = function () {
+          const maxWidth = 1200;
+          const scale = state.img.width > maxWidth ? maxWidth / state.img.width : 1;
+
+          canvas.width = Math.round(state.img.width * scale);
+          canvas.height = Math.round(state.img.height * scale);
+
+          state.loaded = true;
+          state.filename = file.name;
+          state.points = [];
+          state.angleDeg = null;
+          state.mode = "idle";
+
+          emptyElement.style.display = "none";
+          redrawFn();
+          loadedCallback();
+          updateComparison();
+        };
+
+        state.img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function angleBetweenLinesDegrees(a1, a2, b1, b2) {
+      const v1 = { x: a2.x - a1.x, y: a2.y - a1.y };
+      const v2 = { x: b2.x - b1.x, y: b2.y - b1.y };
+
+      const dot = v1.x * v2.x + v1.y * v2.y;
+      const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+      const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+
+      if (mag1 === 0 || mag2 === 0) return null;
+
+      let cosTheta = dot / (mag1 * mag2);
+      cosTheta = Math.max(-1, Math.min(1, cosTheta));
+
+      let angle = Math.acos(cosTheta) * 180 / Math.PI;
+
+      if (angle > 90) angle = 180 - angle;
+
+      return angle;
+    }
+
+    function drawPoint(ctx, point, label, color) {
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#ffffff";
+      ctx.stroke();
+
+      ctx.font = "bold 16px Arial";
+      ctx.fillStyle = color;
+      ctx.fillText(label, point.x + 10, point.y - 10);
+    }
+
+    function drawLine(ctx, a, b, color, width = 4) {
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.lineWidth = width;
+      ctx.strokeStyle = color;
+      ctx.stroke();
+    }
+
+    function drawExtendedLine(ctx, a, b, canvas, color, width = 3) {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+
+      if (dx === 0 && dy === 0) return;
+
+      const len = Math.sqrt(dx * dx + dy * dy);
+      const ux = dx / len;
+      const uy = dy / len;
+
+      const extend = Math.max(canvas.width, canvas.height) * 1.5;
+
+      const p1 = {
+        x: a.x - ux * extend,
+        y: a.y - uy * extend
+      };
+
+      const p2 = {
+        x: a.x + ux * extend,
+        y: a.y + uy * extend
+      };
+
+      drawLine(ctx, p1, p2, color, width);
+    }
+
+    function drawTextWithBackground(ctx, text, x, y, color) {
+      ctx.save();
+      ctx.font = "bold 20px Arial";
+      const padding = 6;
+      const metrics = ctx.measureText(text);
+      const textHeight = 24;
+
+      ctx.fillStyle = "rgba(255,255,255,0.88)";
+      ctx.fillRect(x - padding, y - textHeight + padding, metrics.width + padding * 2, textHeight + padding);
+
+      ctx.fillStyle = color;
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    function calculateXrayAngle() {
+      const p = app.xray.points;
+      if (p.length < 4) return null;
+
+      return angleBetweenLinesDegrees(
+        p[0],
+        p[1],
+        p[2],
+        p[3]
+      );
+    }
+
+    function calculatePhotoAngle() {
+      const p = app.photo.points;
+      if (p.length < 4) return null;
+
+      return angleBetweenLinesDegrees(
+        p[0],
+        p[1],
+        p[2],
+        p[3]
+      );
+    }
+
+    function redrawXray() {
+      const canvas = elements.xrayCanvas;
+      const ctx = canvas.getContext("2d");
+      const state = app.xray;
+
+      if (!state.loaded) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(state.img, 0, 0, canvas.width, canvas.height);
+
+      const p = state.points;
+
+      if (p.length >= 2) {
+        drawExtendedLine(ctx, p[0], p[1], canvas, "#002878", 3);
+      }
+
+      if (p.length >= 4) {
+        drawLine(ctx, p[2], p[3], "#98002e", 4);
+      }
+
+      p.forEach((point, index) => {
+        drawPoint(ctx, point, xrayLandmarks[index].label, index < 2 ? "#002878" : "#98002e");
+      });
+
+      if (state.angleDeg !== null) {
+        const labelPoint = p[2] || p[1] || { x: 20, y: 40 };
+        drawTextWithBackground(ctx, "HAA " + formatNumber(state.angleDeg, 1) + "°", labelPoint.x + 16, labelPoint.y - 16, "#98002e");
+      }
+    }
+
+    function redrawPhoto() {
+      const canvas = elements.photoCanvas;
+      const ctx = canvas.getContext("2d");
+      const state = app.photo;
+
+      if (!state.loaded) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(state.img, 0, 0, canvas.width, canvas.height);
+
+      const p = state.points;
+
+      if (p.length >= 2) {
+        drawExtendedLine(ctx, p[0], p[1], canvas, "#002878", 3);
+      }
+
+      if (p.length >= 4) {
+        drawLine(ctx, p[2], p[3], "#98002e", 4);
+      }
+
+      p.forEach((point, index) => {
+        drawPoint(ctx, point, photoLandmarks[index].label, index < 2 ? "#002878" : "#98002e");
+      });
+
+      if (state.angleDeg !== null) {
+        const labelPoint = p[2] || p[1] || { x: 20, y: 40 };
+        drawTextWithBackground(ctx, "Photo " + formatNumber(state.angleDeg, 1) + "°", labelPoint.x + 16, labelPoint.y - 16, "#98002e");
+      }
+    }
+
+    function startMeasurement(kind) {
+      const isXray = kind === "xray";
+      const state = isXray ? app.xray : app.photo;
+      const landmarks = isXray ? xrayLandmarks : photoLandmarks;
+      const modeText = isXray ? elements.xrayModeText : elements.photoModeText;
+      const instructionText = isXray ? elements.xrayInstructionText : elements.photoInstructionText;
+      const status = isXray ? elements.xrayStatus : elements.photoStatus;
+
+      if (!state.loaded) {
+        setStatus(status, "Upload an image first.", "warn");
+        return;
+      }
+
+      state.mode = "measure";
+      state.points = [];
+      state.angleDeg = null;
+
+      modeText.textContent = "Point 1 of 4";
+      instructionText.textContent = landmarks[0].instruction;
+      setStatus(status, landmarks[0].instruction);
+
+      if (isXray) {
+        elements.xrayAngleDisplay.textContent = "Radiographic HAA: —";
+        redrawXray();
+      } else {
+        elements.photoAngleDisplay.textContent = "Photo Angle: —";
+        redrawPhoto();
+      }
+
+      updateComparison();
+    }
+
+    function handleCanvasClick(kind, event) {
+      const isXray = kind === "xray";
+      const state = isXray ? app.xray : app.photo;
+      const landmarks = isXray ? xrayLandmarks : photoLandmarks;
+      const canvas = isXray ? elements.xrayCanvas : elements.photoCanvas;
+      const modeText = isXray ? elements.xrayModeText : elements.photoModeText;
+      const instructionText = isXray ? elements.xrayInstructionText : elements.photoInstructionText;
+      const status = isXray ? elements.xrayStatus : elements.photoStatus;
+
+      if (!state.loaded) {
+        setStatus(status, "Upload an image first.", "warn");
+        return;
+      }
+
+      if (state.mode !== "measure") {
+        setStatus(status, "Click Start Points before selecting landmarks.", "warn");
+        return;
+      }
+
+      const point = getCanvasClickPoint(event, canvas);
+      const landmarkIndex = state.points.length;
+
+      state.points.push({
+        x: point.x,
+        y: point.y,
+        landmark: landmarks[landmarkIndex].key
+      });
+
+      if (state.points.length < landmarks.length) {
+        const nextIndex = state.points.length;
+        modeText.textContent = "Point " + (nextIndex + 1) + " of 4";
+        instructionText.textContent = landmarks[nextIndex].instruction;
+        setStatus(status, landmarks[nextIndex].instruction, "good");
+      } else {
+        state.mode = "idle";
+
+        if (isXray) {
+          state.angleDeg = calculateXrayAngle();
+          elements.xrayAngleDisplay.textContent = "Radiographic HAA: " + formatNumber(state.angleDeg, 1) + "°";
+          modeText.textContent = "Complete";
+          instructionText.textContent = "Radiographic HAA measurement complete.";
+          setStatus(status, "Radiographic HAA measured: " + formatNumber(state.angleDeg, 1) + "°.", "good");
+        } else {
+          state.angleDeg = calculatePhotoAngle();
+          elements.photoAngleDisplay.textContent = "Photo Angle: " + formatNumber(state.angleDeg, 1) + "°";
+          modeText.textContent = "Complete";
+          instructionText.textContent = "Clinical photo measurement complete.";
+          setStatus(status, "Clinical photo angle measured: " + formatNumber(state.angleDeg, 1) + "°.", "good");
+        }
+
+        updateComparison();
+      }
+
+      if (isXray) {
+        redrawXray();
+      } else {
+        redrawPhoto();
+      }
+    }
+
+    function undoPoint(kind) {
+      const isXray = kind === "xray";
+      const state = isXray ? app.xray : app.photo;
+      const landmarks = isXray ? xrayLandmarks : photoLandmarks;
+      const modeText = isXray ? elements.xrayModeText : elements.photoModeText;
+      const instructionText = isXray ? elements.xrayInstructionText : elements.photoInstructionText;
+      const status = isXray ? elements.xrayStatus : elements.photoStatus;
+
+      if (!state.loaded || state.points.length === 0) {
+        setStatus(status, "Nothing to undo.");
+        return;
+      }
+
+      state.points.pop();
+      state.angleDeg = null;
+      state.mode = "measure";
+
+      const nextIndex = state.points.length;
+      modeText.textContent = "Point " + (nextIndex + 1) + " of 4";
+      instructionText.textContent = landmarks[nextIndex].instruction;
+      setStatus(status, "Last point removed. " + landmarks[nextIndex].instruction);
+
+      if (isXray) {
+        elements.xrayAngleDisplay.textContent = "Radiographic HAA: —";
+        redrawXray();
+      } else {
+        elements.photoAngleDisplay.textContent = "Photo Angle: —";
+        redrawPhoto();
+      }
+
+      updateComparison();
+    }
+
+    function clearImage(kind) {
+      const isXray = kind === "xray";
+      const state = isXray ? app.xray : app.photo;
+      const modeText = isXray ? elements.xrayModeText : elements.photoModeText;
+      const instructionText = isXray ? elements.xrayInstructionText : elements.photoInstructionText;
+      const status = isXray ? elements.xrayStatus : elements.photoStatus;
+
+      state.points = [];
+      state.angleDeg = null;
+      state.mode = "idle";
+
+      if (isXray) {
+        elements.xrayAngleDisplay.textContent = "Radiographic HAA: —";
+        modeText.textContent = state.loaded ? "Ready" : "Upload radiograph";
+        instructionText.textContent = state.loaded ? "Click Start Radiograph Points to begin." : "Choose a hindfoot alignment radiograph to begin.";
+        redrawXray();
+        setStatus(status, state.loaded ? "Radiograph points cleared." : "No radiograph loaded.", state.loaded ? "warn" : "");
+      } else {
+        elements.photoAngleDisplay.textContent = "Photo Angle: —";
+        modeText.textContent = state.loaded ? "Ready" : "Upload photo";
+        instructionText.textContent = state.loaded ? "Click Start Photo Points to begin." : "Choose a posterior standing photo to begin.";
+        redrawPhoto();
+        setStatus(status, state.loaded ? "Photo points cleared." : "No clinical photo loaded.", state.loaded ? "warn" : "");
+      }
+
+      updateComparison();
+    }
+
+    function getComparisonValues() {
+      const xray = app.xray.angleDeg;
+      const photo = app.photo.angleDeg;
+
+      if (xray === null || photo === null) {
+        return {
+          xray,
+          photo,
+          difference: null,
+          absoluteDifference: null
+        };
+      }
+
+      return {
+        xray,
+        photo,
+        difference: photo - xray,
+        absoluteDifference: Math.abs(photo - xray)
+      };
+    }
+
+    function updateComparison() {
+      const c = getComparisonValues();
+
+      elements.comparisonBody.innerHTML = `
+        <tr>
+          <td>Radiographic HAA</td>
+          <td>${c.xray === null ? "—" : formatNumber(c.xray, 2) + "°"}</td>
+        </tr>
+        <tr>
+          <td>Clinical photo angle</td>
+          <td>${c.photo === null ? "—" : formatNumber(c.photo, 2) + "°"}</td>
+        </tr>
+        <tr>
+          <td>Difference: Photo − Radiograph</td>
+          <td>${c.difference === null ? "—" : formatNumber(c.difference, 2) + "°"}</td>
+        </tr>
+        <tr>
+          <td>Absolute difference</td>
+          <td>${c.absoluteDifference === null ? "—" : formatNumber(c.absoluteDifference, 2) + "°"}</td>
+        </tr>
+      `;
+    }
+
+    function pointsToLandmarkObject(points) {
+      const out = {};
+
+      points.forEach((p) => {
+        out[p.landmark] = {
+          x: Number(formatNumber(p.x, 3)),
+          y: Number(formatNumber(p.y, 3))
+        };
+      });
+
+      return out;
+    }
+
+    function baseMetadata() {
+      return {
+        case_id: elements.caseId.value || "unspecified_case",
+        created_at: new Date().toISOString(),
+        measurement_date: elements.date.value || "",
+        side: elements.side.value,
+        notes: elements.notes.value || "",
+        source: "manual_click"
+      };
+    }
+
+    function imageLabelRecord(kind) {
+      const isXray = kind === "xray";
+      const state = isXray ? app.xray : app.photo;
+      const canvas = isXray ? elements.xrayCanvas : elements.photoCanvas;
+
+      return {
+        ...baseMetadata(),
+        image_type: isXray ? "radiograph" : "clinical_photo",
+        view: isXray ? "hindfoot_alignment" : "posterior_standing",
+        image_filename: state.filename || "",
+        image_width_px: state.loaded ? canvas.width : null,
+        image_height_px: state.loaded ? canvas.height : null,
+        landmarks: pointsToLandmarkObject(state.points),
+        measurements: isXray
+          ? { hindfoot_alignment_angle_deg: state.angleDeg }
+          : { photo_hindfoot_angle_deg: state.angleDeg }
+      };
+    }
+
+    function fullCaseRecord() {
+      const c = getComparisonValues();
+
+      return {
+        ...baseMetadata(),
+        app_name: "Hindfoot Alignment Comparator",
+        app_version: "0.1.0-manual",
+        radiograph: imageLabelRecord("xray"),
+        clinical_photo: imageLabelRecord("photo"),
+        comparison: {
+          radiographic_haa_deg: c.xray,
+          photo_angle_deg: c.photo,
+          difference_photo_minus_radiograph_deg: c.difference,
+          absolute_difference_deg: c.absoluteDifference
+        }
+      };
+    }
+
+    function downloadTextFile(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    }
+
+    function safeCaseId() {
+      return (elements.caseId.value || "hindfoot_alignment_case")
+        .trim()
+        .replace(/[^a-zA-Z0-9_-]/g, "_");
+    }
+
+    function downloadCanvasImage(canvas, filename) {
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function downloadCsv() {
+      const c = getComparisonValues();
+
+      const rows = [
+        [
+          "Case ID",
+          "Measurement Date",
+          "Side",
+          "Radiographic HAA degrees",
+          "Photo angle degrees",
+          "Difference photo minus radiograph degrees",
+          "Absolute difference degrees",
+          "Notes"
+        ],
+        [
+          elements.caseId.value || "",
+          elements.date.value || "",
+          elements.side.value,
+          c.xray === null ? "" : formatNumber(c.xray, 4),
+          c.photo === null ? "" : formatNumber(c.photo, 4),
+          c.difference === null ? "" : formatNumber(c.difference, 4),
+          c.absoluteDifference === null ? "" : formatNumber(c.absoluteDifference, 4),
+          elements.notes.value || ""
+        ]
+      ];
+
+      const csv = rows
+        .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        .join("\n");
+
+      downloadTextFile(safeCaseId() + "_comparison.csv", csv, "text/csv;charset=utf-8;");
+    }
+
+    function downloadTrainingJson() {
+      const data = {
+        radiograph: imageLabelRecord("xray"),
+        clinical_photo: imageLabelRecord("photo")
+      };
+
+      downloadTextFile(
+        safeCaseId() + "_training_labels.json",
+        JSON.stringify(data, null, 2),
+        "application/json;charset=utf-8;"
+      );
+    }
+
+    function downloadFullCaseJson() {
+      downloadTextFile(
+        safeCaseId() + "_full_case.json",
+        JSON.stringify(fullCaseRecord(), null, 2),
+        "application/json;charset=utf-8;"
+      );
+    }
+
+    elements.xrayUpload.addEventListener("change", function (event) {
+      loadImage(
+        event.target.files[0],
+        app.xray,
+        elements.xrayCanvas,
+        elements.xrayEmpty,
+        redrawXray,
+        function () {
+          elements.xrayModeText.textContent = "Ready";
+          elements.xrayInstructionText.textContent = "Click Start Radiograph Points to begin.";
+          elements.xrayAngleDisplay.textContent = "Radiographic HAA: —";
+          setStatus(elements.xrayStatus, "Radiograph loaded. Click Start Radiograph Points.", "good");
+        }
+      );
+    });
+
+    elements.photoUpload.addEventListener("change", function (event) {
+      loadImage(
+        event.target.files[0],
+        app.photo,
+        elements.photoCanvas,
+        elements.photoEmpty,
+        redrawPhoto,
+        function () {
+          elements.photoModeText.textContent = "Ready";
+          elements.photoInstructionText.textContent = "Click Start Photo Points to begin.";
+          elements.photoAngleDisplay.textContent = "Photo Angle: —";
+          setStatus(elements.photoStatus, "Photo loaded. Click Start Photo Points.", "good");
+        }
+      );
+    });
+
+    elements.xrayCanvas.addEventListener("click", function (event) {
+      handleCanvasClick("xray", event);
+    });
+
+    elements.photoCanvas.addEventListener("click", function (event) {
+      handleCanvasClick("photo", event);
+    });
+
+    elements.startXrayBtn.addEventListener("click", function () {
+      startMeasurement("xray");
+    });
+
+    elements.startPhotoBtn.addEventListener("click", function () {
+      startMeasurement("photo");
+    });
+
+    elements.undoXrayBtn.addEventListener("click", function () {
+      undoPoint("xray");
+    });
+
+    elements.undoPhotoBtn.addEventListener("click", function () {
+      undoPoint("photo");
+    });
+
+    elements.clearXrayBtn.addEventListener("click", function () {
+      clearImage("xray");
+    });
+
+    elements.clearPhotoBtn.addEventListener("click", function () {
+      clearImage("photo");
+    });
+
+    elements.downloadXrayImageBtn.addEventListener("click", function () {
+      if (!app.xray.loaded) {
+        setStatus(elements.xrayStatus, "No radiograph to download.", "warn");
+        return;
+      }
+
+      redrawXray();
+      downloadCanvasImage(elements.xrayCanvas, safeCaseId() + "_marked_radiograph.png");
+    });
+
+    elements.downloadPhotoImageBtn.addEventListener("click", function () {
+      if (!app.photo.loaded) {
+        setStatus(elements.photoStatus, "No photo to download.", "warn");
+        return;
+      }
+
+      redrawPhoto();
+      downloadCanvasImage(elements.photoCanvas, safeCaseId() + "_marked_photo.png");
+    });
+
+    elements.downloadCsvBtn.addEventListener("click", downloadCsv);
+    elements.downloadJsonBtn.addEventListener("click", downloadTrainingJson);
+    elements.downloadAllJsonBtn.addEventListener("click", downloadFullCaseJson);
+
+    updateComparison();
+  </script>
+</body>
+</html>
